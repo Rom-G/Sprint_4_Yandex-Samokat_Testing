@@ -16,6 +16,9 @@ public class HomePage {
     private final By samokatLogo = By.xpath("//img[@alt='Scooter']/parent::a");
     private final By yandexLogo = By.xpath("//img[@alt='Yandex']/parent::a");
     private final By sloganLocator = By.xpath("//div[contains(@class, 'Home_Header__iJKdX') and contains(normalize-space(), 'Самокат') and contains(normalize-space(), 'пару дней')]");
+    private final By orderStatusButton = By.className("Header_Link__1TAG7");
+    private final By orderStatusInput = By.className("Input_Input__1iN_Z");
+    private final By goStatusButton = By.cssSelector(".Button_Button__ra12g.Header_Button__28dPO");
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -26,38 +29,6 @@ public class HomePage {
         driver.get("https://qa-scooter.praktikum-services.ru/");
         waitForLoadBottomOrderButton();
         tryClickCookieConfirm();
-    }
-
-    private void waitForLoadBottomOrderButton() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(bottomOrderButton));
-    }
-
-    private void tryClickCookieConfirm() {
-        try {
-            WebElement button = new WebDriverWait(driver, 5)
-                    .until(ExpectedConditions.elementToBeClickable(cookieConfirmButton));
-            button.click();
-        } catch (TimeoutException ignored) {
-        }
-    }
-
-    public void clickButtonByLocation(ButtonLocation location) {
-        By locator;
-        if (location == ButtonLocation.ORDERTOP) {
-            locator = topOrderButton;
-        } else if (location == ButtonLocation.ORDERBOTTOM) {
-            locator = bottomOrderButton;
-        } else if (location == ButtonLocation.LOGOYANDEX) {
-            locator = yandexLogo;
-        } else if (location == ButtonLocation.LOGOSAMOKAT) {
-            locator = samokatLogo;
-        } else {
-            throw new IllegalArgumentException("Неизвестная локация кнопки: " + location);
-        }
-
-        WebElement orderButton = wait.until(ExpectedConditions.elementToBeClickable(locator));
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", orderButton);
-        orderButton.click();
     }
 
     public boolean isSloganDisplayed() {
@@ -93,6 +64,56 @@ public class HomePage {
         return driver.getCurrentUrl();
     }
 
-    public enum ButtonLocation {ORDERTOP, ORDERBOTTOM, LOGOYANDEX, LOGOSAMOKAT}
+    public void enterOrderNumber(String orderNumber) {
+        clickButtonByLocation(ButtonLocation.ORDERSTATUSBUTTON);
+        wait.until(ExpectedConditions.elementToBeClickable(orderStatusInput));
+        driver.findElement(orderStatusInput).sendKeys(orderNumber);
+        clickButtonByLocation(ButtonLocation.GOSTATUSBUTTON);
+    }
+
+    public void clickButtonByLocation(ButtonLocation location) {
+        By locator;
+        if (location == ButtonLocation.ORDERTOP) {
+            locator = topOrderButton;
+        } else if (location == ButtonLocation.ORDERBOTTOM) {
+            locator = bottomOrderButton;
+        } else if (location == ButtonLocation.LOGOYANDEX) {
+            locator = yandexLogo;
+        } else if (location == ButtonLocation.LOGOSAMOKAT) {
+            locator = samokatLogo;
+        } else if (location == ButtonLocation.ORDERSTATUSBUTTON) {
+            locator = orderStatusButton;
+        } else if (location == ButtonLocation.GOSTATUSBUTTON) {
+            locator = goStatusButton;
+        } else {
+            throw new IllegalArgumentException("Неизвестная локация кнопки: " + location);
+        }
+
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", button);
+        button.click();
+    }
+
+    private void waitForLoadBottomOrderButton() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(bottomOrderButton));
+    }
+
+    private void tryClickCookieConfirm() {
+        try {
+            WebElement button = new WebDriverWait(driver, 5)
+                    .until(ExpectedConditions.elementToBeClickable(cookieConfirmButton));
+            button.click();
+        } catch (TimeoutException ignored) {
+        }
+    }
+
+    public enum ButtonLocation {
+        ORDERTOP,
+        ORDERBOTTOM,
+        LOGOYANDEX,
+        LOGOSAMOKAT,
+        ORDERSTATUSBUTTON,
+        GOSTATUSBUTTON
+    }
 
 }
