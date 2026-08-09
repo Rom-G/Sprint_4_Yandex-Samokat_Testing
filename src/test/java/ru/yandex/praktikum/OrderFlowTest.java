@@ -59,10 +59,10 @@ public class OrderFlowTest {
 
         return new Object[][] {
                 // Прогон 1: Верхняя кнопка + Данные Ивана
-                {HomePage.ButtonLocation.TOP, whoData1, rentData1},
+                {HomePage.ButtonLocation.ORDERTOP, whoData1, rentData1},
 
                 // Прогон 2: Нижняя кнопка + Данные Петра
-                {HomePage.ButtonLocation.BOTTOM, whoData2, rentData2},
+                {HomePage.ButtonLocation.ORDERBOTTOM, whoData2, rentData2},
         };
     }
 
@@ -72,7 +72,7 @@ public class OrderFlowTest {
 
         HomePage homePage = new HomePage(driver);
         homePage.openHomePage();
-        homePage.clickOrderButton(buttonLocation);
+        homePage.clickButtonByLocation(buttonLocation);
 
         OrderWhoPage orderWhoPage = new OrderWhoPage(driver);
         orderWhoPage.fillForm(whoData);
