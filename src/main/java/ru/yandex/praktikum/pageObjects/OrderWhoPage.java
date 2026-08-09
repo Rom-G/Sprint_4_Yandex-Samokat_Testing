@@ -5,8 +5,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.yandex.praktikum.dto.OrderData;
 
-import java.util.List;
-
 public class OrderWhoPage {
 
     private final WebDriver driver;
@@ -22,6 +20,10 @@ public class OrderWhoPage {
     public OrderWhoPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, 10);
+    }
+
+    public void openOrderWhoPage() {
+        driver.get("https://qa-scooter.praktikum-services.ru/order");
     }
 
     public void fillForm(OrderData data) {
@@ -62,5 +64,36 @@ public class OrderWhoPage {
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", nextButton);
         nextButton.click();
     }
+
+    public String findFieldErrorText(FieldLocation location, String wrongText) {
+        By fieldLocator = findFieldLocator(location);
+        fillInput(fieldLocator, wrongText);
+        driver.findElement(By.className("Header_Disclaimer__3VEni")).click();
+        WebElement error = findVisibleErrorElement();
+        return error.getText().trim();
+    }
+
+    public By findFieldLocator(FieldLocation location) {
+        By locator;
+        if (location == FieldLocation.NAME) {
+            locator = nameField;
+        } else if (location == FieldLocation.SURNAME) {
+            locator = surnameField;
+        } else if (location == FieldLocation.ADDRESS) {
+            locator = addressField;
+        } else if (location == FieldLocation.PHONE) {
+            locator = phoneField;
+        } else {
+            throw new IllegalArgumentException("Неизвестная локация поля: " + location);
+        }
+
+        return locator;
+    }
+
+    private WebElement findVisibleErrorElement() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".Input_ErrorMessage__3HvIb.Input_Visible___syz6")));
+    }
+
+    public enum FieldLocation {NAME, SURNAME, ADDRESS, PHONE}
 
 }

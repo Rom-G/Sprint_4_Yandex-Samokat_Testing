@@ -37,8 +37,7 @@ public class HomePage {
             WebElement button = new WebDriverWait(driver, 5)
                     .until(ExpectedConditions.elementToBeClickable(cookieConfirmButton));
             button.click();
-        } catch (TimeoutException e) {
-            return;
+        } catch (TimeoutException ignored) {
         }
     }
 
@@ -66,7 +65,7 @@ public class HomePage {
         return slogan != null;
     }
 
-    public String getNewTabUrl(String homeHandle) {
+    public String waitForNewTabAndReturnUrl(String homeHandle) {
         wait.until(d -> d.getWindowHandles().size() > 1);
         Set<String> handles = driver.getWindowHandles();
 

@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import ru.yandex.praktikum.pageObjects.HomePage;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LogoTest {
@@ -35,7 +34,7 @@ public class LogoTest {
         String homeHandle = driver.getWindowHandle();
         homePage.clickButtonByLocation(HomePage.ButtonLocation.LOGOYANDEX);
 
-        String actualUrl = homePage.getNewTabUrl(homeHandle);
+        String actualUrl = homePage.waitForNewTabAndReturnUrl(homeHandle);
         assertTrue("Переход не на страницу Яндекса: " + actualUrl, actualUrl.contains("dzen.ru"));
     }
 
