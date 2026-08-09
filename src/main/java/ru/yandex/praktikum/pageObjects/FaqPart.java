@@ -45,10 +45,7 @@ public class FaqPart {
     }
 
     private void scrollToQuestion(WebElement questionButton) {
-        ((JavascriptExecutor)driver).executeScript(
-                "arguments[0].scrollIntoView({block: 'center'});",
-                questionButton
-        );
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", questionButton);
     }
 
     private void clickQuestionButton(WebElement questionButton) {

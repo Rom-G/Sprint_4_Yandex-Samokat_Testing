@@ -9,8 +9,8 @@ public class HomePage {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final By cookieConfirmButton = By.id("rcc-confirm-button");
-    private final By bottomOrderButton =
-            By.cssSelector(".Home_FinishButton__1_cWm .Button_Button__ra12g");
+    private final By bottomOrderButton = By.cssSelector(".Home_FinishButton__1_cWm .Button_Button__ra12g");
+    private final By topOrderButton = By.cssSelector(".Header_Nav__AGCXC .Button_Button__ra12g");
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -36,5 +36,22 @@ public class HomePage {
             return;
         }
     }
+
+    public void clickOrderButton(ButtonLocation location) {
+        By locator;
+        if (location == ButtonLocation.TOP) {
+            locator = topOrderButton;
+        } else if (location == ButtonLocation.BOTTOM) {
+            locator = bottomOrderButton;
+        } else {
+            throw new IllegalArgumentException("Неизвестная локация кнопки: " + location);
+        }
+
+        WebElement orderButton = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", orderButton);
+        orderButton.click();
+    }
+
+    public enum ButtonLocation { TOP, BOTTOM }
 
 }
