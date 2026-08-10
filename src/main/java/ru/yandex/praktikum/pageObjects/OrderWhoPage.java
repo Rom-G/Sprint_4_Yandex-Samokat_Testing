@@ -9,14 +9,6 @@ public class OrderWhoPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final By nameField = By.cssSelector("div.Order_Form__17u6u input[placeholder='* Имя']");
-    private final By surnameField = By.cssSelector("div.Order_Form__17u6u input[placeholder='* Фамилия']");
-    private final By addressField = By.cssSelector("div.Order_Form__17u6u input[placeholder='* Адрес: куда привезти заказ']");
-    private final By metroField = By.cssSelector("div.Order_Form__17u6u .select-search__input");
-    private final By metroDropdownContainer = By.className("select-search__select");
-    private final By phoneField = By.cssSelector("div.Order_Form__17u6u input[placeholder='* Телефон: на него позвонит курьер']");
-    private final By nextBtnLocator = By.cssSelector("button.Button_Middle__1CSJM");
-    private final String orderWhoUrl = "https://qa-scooter.praktikum-services.ru/order";
 
     public OrderWhoPage(WebDriver driver) {
         this.driver = driver;
@@ -24,15 +16,15 @@ public class OrderWhoPage {
     }
 
     public void openOrderWhoPage() {
-        driver.get(orderWhoUrl);
+        driver.get("https://qa-scooter.praktikum-services.ru/order");
     }
 
     public void fillForm(OrderData data) {
-        fillInput(nameField, data.getName());
-        fillInput(surnameField, data.getSurname());
-        fillInput(addressField, data.getAddress());
+        fillInput(OrderWhoPageLocators.NAME_FIELD, data.getName());
+        fillInput(OrderWhoPageLocators.SURNAME_FIELD, data.getSurname());
+        fillInput(OrderWhoPageLocators.ADDRESS_FIELD, data.getAddress());
         selectMetro(data.getMetro());
-        fillInput(phoneField, data.getPhone());
+        fillInput(OrderWhoPageLocators.PHONE_FIELD, data.getPhone());
     }
 
     private void fillInput(By locator, String value) {
@@ -42,10 +34,10 @@ public class OrderWhoPage {
     }
 
     private void selectMetro(String metroName) {
-        WebElement inputField = wait.until(ExpectedConditions.visibilityOfElementLocated(metroField));
+        WebElement inputField = wait.until(ExpectedConditions.visibilityOfElementLocated(OrderWhoPageLocators.METRO_FIELD));
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", inputField);
         inputField.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(metroDropdownContainer));
+        wait.until(ExpectedConditions.presenceOfElementLocated(OrderWhoPageLocators.METRO_DROPDOWN_CONTAINER));
 
         String xpath = "//div[contains(@class, 'select-search__select')]//*[contains(text(), '" + metroName + "')]";
         By stationLocator = By.xpath(xpath);
@@ -61,7 +53,7 @@ public class OrderWhoPage {
     }
 
     public void clickNextButton() {
-        WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(nextBtnLocator));
+        WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(OrderWhoPageLocators.NEXT_BTN_LOCATOR));
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", nextButton);
         nextButton.click();
     }
@@ -69,7 +61,7 @@ public class OrderWhoPage {
     public String findFieldErrorText(FieldLocation location, String wrongText) {
         By fieldLocator = findFieldLocator(location);
         fillInput(fieldLocator, wrongText);
-        driver.findElement(By.className("Header_Disclaimer__3VEni")).click();
+        driver.findElement(OrderWhoPageLocators.HEADER_DISCLAIMER).click();
         WebElement error = findVisibleErrorElement();
         return error.getText().trim();
     }
@@ -77,13 +69,13 @@ public class OrderWhoPage {
     public By findFieldLocator(FieldLocation location) {
         By locator;
         if (location == FieldLocation.NAME) {
-            locator = nameField;
+            locator = OrderWhoPageLocators.NAME_FIELD;
         } else if (location == FieldLocation.SURNAME) {
-            locator = surnameField;
+            locator = OrderWhoPageLocators.SURNAME_FIELD;
         } else if (location == FieldLocation.ADDRESS) {
-            locator = addressField;
+            locator = OrderWhoPageLocators.ADDRESS_FIELD;
         } else if (location == FieldLocation.PHONE) {
-            locator = phoneField;
+            locator = OrderWhoPageLocators.PHONE_FIELD;
         } else {
             throw new IllegalArgumentException("Неизвестная локация поля: " + location);
         }
@@ -92,7 +84,7 @@ public class OrderWhoPage {
     }
 
     private WebElement findVisibleErrorElement() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".Input_ErrorMessage__3HvIb.Input_Visible___syz6")));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(OrderWhoPageLocators.VISIBLE_ERROR));
     }
 
     public enum FieldLocation {NAME, SURNAME, ADDRESS, PHONE}

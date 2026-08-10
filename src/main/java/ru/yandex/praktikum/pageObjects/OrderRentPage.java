@@ -14,11 +14,6 @@ public class OrderRentPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final By dateField = By.cssSelector(".react-datepicker__input-container input");
-    private final By rentDurationDropdown = By.cssSelector(".Dropdown-control");
-    private final By colorCheckboxes = By.cssSelector("label.Checkbox_Label__3wxSf input[type='checkbox']");
-    private final By commentField = By.cssSelector("input[placeholder='Комментарий для курьера']");
-    private final By orderBtnLocator = By.cssSelector("button.Button_Middle__1CSJM:not(.Button_Inverted__3IF-i)");
 
     public OrderRentPage(WebDriver driver) {
         this.driver = driver;
@@ -26,10 +21,10 @@ public class OrderRentPage {
     }
 
     public void fillRentDetails(RentData data) {
-        fillInputField(dateField, data.getDate());
+        fillInputField(OrderRentPageLocators.DATE_FIELD, data.getDate());
         selectDuration(data.getDuration());
         selectColor(data.getColor());
-        fillInputField(commentField, data.getComment());
+        fillInputField(OrderRentPageLocators.COMMENT_FIELD, data.getComment());
     }
 
     private void fillInputField(By locator, String text) {
@@ -40,7 +35,7 @@ public class OrderRentPage {
     }
 
     private void selectDuration(String durationText) {
-        WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(rentDurationDropdown));
+        WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(OrderRentPageLocators.RENT_DURATION_DROPDOWN));
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", dropdown);
         dropdown.click();
 
@@ -50,7 +45,7 @@ public class OrderRentPage {
     }
 
     private void selectColor(String color) {
-        List<WebElement> checkboxes = driver.findElements(colorCheckboxes);
+        List<WebElement> checkboxes = driver.findElements(OrderRentPageLocators.COLOR_CHECKBOXES);
 
         for (WebElement cb : checkboxes) {
             //Поднимаемся к родительскому label, чтобы получить текст
@@ -67,7 +62,7 @@ public class OrderRentPage {
     }
 
     public void clickOrderButton() {
-        WebElement orderButton = wait.until(ExpectedConditions.elementToBeClickable(orderBtnLocator));
+        WebElement orderButton = wait.until(ExpectedConditions.elementToBeClickable(OrderRentPageLocators.ORDER_BTN_LOCATOR));
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", orderButton);
         orderButton.click();
     }

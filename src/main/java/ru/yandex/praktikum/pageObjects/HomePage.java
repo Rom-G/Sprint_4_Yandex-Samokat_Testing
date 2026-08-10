@@ -10,16 +10,6 @@ public class HomePage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final By cookieConfirmButton = By.id("rcc-confirm-button");
-    private final By bottomOrderButton = By.cssSelector(".Home_FinishButton__1_cWm .Button_Button__ra12g");
-    private final By topOrderButton = By.cssSelector(".Header_Nav__AGCXC .Button_Button__ra12g");
-    private final By samokatLogo = By.xpath("//img[@alt='Scooter']/parent::a");
-    private final By yandexLogo = By.xpath("//img[@alt='Yandex']/parent::a");
-    private final By sloganLocator = By.xpath("//div[contains(@class, 'Home_Header__iJKdX') and contains(normalize-space(), 'Самокат') and contains(normalize-space(), 'пару дней')]");
-    private final By orderStatusButton = By.className("Header_Link__1TAG7");
-    private final By orderStatusInput = By.className("Input_Input__1iN_Z");
-    private final By goStatusButton = By.cssSelector(".Button_Button__ra12g.Header_Button__28dPO");
-    private final String homeUrl = "https://qa-scooter.praktikum-services.ru/";
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -27,13 +17,13 @@ public class HomePage {
     }
 
     public void openHomePage() {
-        driver.get(homeUrl);
+        driver.get("https://qa-scooter.praktikum-services.ru/");
         waitForLoadBottomOrderButton();
         tryClickCookieConfirm();
     }
 
     public boolean isSloganDisplayed() {
-        WebElement slogan = wait.until(ExpectedConditions.visibilityOfElementLocated(sloganLocator));
+        WebElement slogan = wait.until(ExpectedConditions.visibilityOfElementLocated(HomePageLocators.SLOGAN_LOCATOR));
         return slogan != null;
     }
 
@@ -67,25 +57,25 @@ public class HomePage {
 
     public void enterOrderNumber(String orderNumber) {
         clickButtonByLocation(ButtonLocation.ORDERSTATUSBUTTON);
-        wait.until(ExpectedConditions.elementToBeClickable(orderStatusInput));
-        driver.findElement(orderStatusInput).sendKeys(orderNumber);
+        wait.until(ExpectedConditions.elementToBeClickable(HomePageLocators.ORDER_STATUS_INPUT));
+        driver.findElement(HomePageLocators.ORDER_STATUS_INPUT).sendKeys(orderNumber);
         clickButtonByLocation(ButtonLocation.GOSTATUSBUTTON);
     }
 
     public void clickButtonByLocation(ButtonLocation location) {
         By locator;
         if (location == ButtonLocation.ORDERTOP) {
-            locator = topOrderButton;
+            locator = HomePageLocators.TOP_ORDER_BUTTON;
         } else if (location == ButtonLocation.ORDERBOTTOM) {
-            locator = bottomOrderButton;
+            locator = HomePageLocators.BOTTOM_ORDER_BUTTON;
         } else if (location == ButtonLocation.LOGOYANDEX) {
-            locator = yandexLogo;
+            locator = HomePageLocators.YANDEX_LOGO;
         } else if (location == ButtonLocation.LOGOSAMOKAT) {
-            locator = samokatLogo;
+            locator = HomePageLocators.SAMOKAT_LOGO;
         } else if (location == ButtonLocation.ORDERSTATUSBUTTON) {
-            locator = orderStatusButton;
+            locator = HomePageLocators.ORDER_STATUS_BUTTON;
         } else if (location == ButtonLocation.GOSTATUSBUTTON) {
-            locator = goStatusButton;
+            locator = HomePageLocators.GO_STATUS_BUTTON;
         } else {
             throw new IllegalArgumentException("Неизвестная локация кнопки: " + location);
         }
@@ -96,13 +86,13 @@ public class HomePage {
     }
 
     private void waitForLoadBottomOrderButton() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(bottomOrderButton));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(HomePageLocators.BOTTOM_ORDER_BUTTON));
     }
 
     private void tryClickCookieConfirm() {
         try {
             WebElement button = new WebDriverWait(driver, 5)
-                    .until(ExpectedConditions.elementToBeClickable(cookieConfirmButton));
+                    .until(ExpectedConditions.elementToBeClickable(HomePageLocators.COOKIE_CONFIRM_BUTTON));
             button.click();
         } catch (TimeoutException ignored) {
         }
