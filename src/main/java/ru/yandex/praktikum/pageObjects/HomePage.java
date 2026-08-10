@@ -19,6 +19,7 @@ public class HomePage {
     private final By orderStatusButton = By.className("Header_Link__1TAG7");
     private final By orderStatusInput = By.className("Input_Input__1iN_Z");
     private final By goStatusButton = By.cssSelector(".Button_Button__ra12g.Header_Button__28dPO");
+    private final String homeUrl = "https://qa-scooter.praktikum-services.ru/";
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -26,7 +27,7 @@ public class HomePage {
     }
 
     public void openHomePage() {
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.get(homeUrl);
         waitForLoadBottomOrderButton();
         tryClickCookieConfirm();
     }

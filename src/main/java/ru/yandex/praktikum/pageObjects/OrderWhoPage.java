@@ -16,6 +16,7 @@ public class OrderWhoPage {
     private final By metroDropdownContainer = By.className("select-search__select");
     private final By phoneField = By.cssSelector("div.Order_Form__17u6u input[placeholder='* Телефон: на него позвонит курьер']");
     private final By nextBtnLocator = By.cssSelector("button.Button_Middle__1CSJM");
+    private final String orderWhoUrl = "https://qa-scooter.praktikum-services.ru/order";
 
     public OrderWhoPage(WebDriver driver) {
         this.driver = driver;
@@ -23,7 +24,7 @@ public class OrderWhoPage {
     }
 
     public void openOrderWhoPage() {
-        driver.get("https://qa-scooter.praktikum-services.ru/order");
+        driver.get(orderWhoUrl);
     }
 
     public void fillForm(OrderData data) {
